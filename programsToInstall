@@ -1,4 +1,5 @@
 
 gotop -> sys-process/gotop -- guru --View system resorce usage
 cjdns -> net-misc/cjdns -- liftm -- p2p mesh network, internet successor
-
+irssi -> net-irc/irssi -- -- IRC terminal client
+ncmpcpp -> media-sound/ncmpcpp -- -- Terminal music player (needs MPD deamon)

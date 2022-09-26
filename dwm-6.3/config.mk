@@ -3,6 +3,7 @@ VERSION = 6.3
 
 # Customize below to fit your system
 
+
 # paths
 PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/share/man
@@ -13,6 +14,7 @@ X11LIB = /usr/X11R6/lib
 # Xinerama, comment if you don't want it
 XINERAMALIBS  = -lXinerama
 XINERAMAFLAGS = -DXINERAMA
+
 
 # freetype
 FREETYPELIBS = -lfontconfig -lXft

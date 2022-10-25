@@ -159,7 +159,6 @@ main(void)
 {
 	char *status;
 	char *avgs;
-	char *tmar;
 	char *tmutc;
 	char *tmbln;
 	char *t0;
@@ -173,21 +172,19 @@ main(void)
 
 	for (;;sleep(30)) {
 		avgs = loadavg();
-		tmar = mktimes("%H:%M", tzargentina);
 		tmutc = mktimes("%H:%M", tzutc);
 		tmbln = mktimes("KW %W %a %d %b %H:%M %Z %Y", tzberlin);
 		t0 = gettemperature("/sys/devices/virtual/thermal/thermal_zone0", "temp");
 		t1 = gettemperature("/sys/devices/virtual/thermal/thermal_zone1", "temp");
 		pkt = PKTwallet();
 
-		status = smprintf("|🪙%.7s :%s :%s :%s A:%s U:%s %s",
-				    pkt, t0, t1, avgs, tmar, tmutc, tmbln);
+		status = smprintf("|🪙%.7s :%s :%s :%s U:%s %s",
+				     pkt, t0, t1, avgs, tmutc, tmbln);
 		setstatus(status);
 
 		free(t0);
 		free(t1);
 		free(avgs);
-		free(tmar);
 		free(tmutc);
 		free(tmbln);
 		free(status);

@@ -196,6 +196,15 @@ execscript(char *cmd)
 	return smprintf("%s", retval);
 }
 
+char *
+PKTwallet(void)
+{
+
+
+	return execscript("pktctl --wallet getbalance");
+}
+
+
 int
 main(void)
 {
@@ -207,7 +216,8 @@ main(void)
 	char *tmbln;
 	char *t0;
 	char *t1;
-	char *kbmap;
+//	char *kbmap;
+	char *pkt;
 
 	if (!(dpy = XOpenDisplay(NULL))) {
 		fprintf(stderr, "dwmstatus: cannot open display.\n");
@@ -220,16 +230,16 @@ main(void)
 		tmar = mktimes("%H:%M", tzargentina);
 		tmutc = mktimes("%H:%M", tzutc);
 		tmbln = mktimes("KW %W %a %d %b %H:%M %Z %Y", tzberlin);
-		kbmap = execscript("setxkbmap -query | grep layout | cut -d':' -f 2- | tr -d ' '");
+//		kbmap = execscript("setxkbmap -query | grep layout | cut -d':' -f 2- | tr -d ' '");
 		t0 = gettemperature("/sys/devices/virtual/thermal/thermal_zone0", "temp");
 		t1 = gettemperature("/sys/devices/virtual/thermal/thermal_zone1", "temp");
+		pkt = PKTwallet();
 
-		status = smprintf(":%s :%s :%s :%s A:%s U:%s %s",
-				kbmap, t0, t1, avgs, tmar, tmutc,
-				tmbln);
+		status = smprintf("|🪙%.7s :%s :%s :%s A:%s U:%s %s",
+				    pkt, t0, t1, avgs, tmar, tmutc, tmbln);
 		setstatus(status);
 
-		free(kbmap);
+//		free(kbmap);
 		free(t0);
 		free(t1);
 		free(avgs);

@@ -17,9 +17,8 @@
 
 #include <X11/Xlib.h>
 
-char *tzargentina = "Europe/London";
+char *tzUK = "Europe/London";
 char *tzutc = "UTC";
-char *tzberlin = "Europe/London";
 
 static Display *dpy;
 
@@ -153,17 +152,30 @@ PKTwallet(void)
 	return execscript("pktctl --wallet getbalance");
 }
 
+char*
+Weather(char *city)
+{
+	char fn[128] = {0};
+	strcat(fn, "curl wttr.in/");
+	strcat(fn, city);
+	char xxx ='"';
+	strcat(fn, "?format=");
+	strncat(fn, &xxx, 1);
+	strcat(fn, "%c%t.%w\\n");
+	strncat(fn, &xxx, 1);
+	return execscript(fn);
+}
 
 int
 main(void)
 {
 	char *status;
 	char *avgs;
-	char *tmutc;
 	char *tmbln;
 	char *t0;
 	char *t1;
 	char *pkt;
+	char *weather;
 
 	if (!(dpy = XOpenDisplay(NULL))) {
 		fprintf(stderr, "dwmstatus: cannot open display.\n");
@@ -172,22 +184,21 @@ main(void)
 
 	for (;;sleep(30)) {
 		avgs = loadavg();
-		tmutc = mktimes("%H:%M", tzutc);
-		tmbln = mktimes("KW %W %a %d %b %H:%M %Z %Y", tzberlin);
+		tmbln = mktimes("%a %d %b %Y %H:%M", tzUK);
 		t0 = gettemperature("/sys/devices/virtual/thermal/thermal_zone0", "temp");
 		t1 = gettemperature("/sys/devices/virtual/thermal/thermal_zone1", "temp");
 		pkt = PKTwallet();
-
-		status = smprintf("|🪙%.7s :%s :%s :%s U:%s %s",
-				     pkt, t0, t1, avgs, tmutc, tmbln);
+		weather = Weather("Coventry");
+		status = smprintf("|🪙%.7s |🌡️%s 🌡️:%s |:%s |%s |%s |",
+				       pkt, t0, t1, avgs, tmbln, weather);
 		setstatus(status);
 
 		free(t0);
 		free(t1);
 		free(avgs);
-		free(tmutc);
 		free(tmbln);
 		free(status);
+		free(weather);
 	}
 
 	XCloseDisplay(dpy);

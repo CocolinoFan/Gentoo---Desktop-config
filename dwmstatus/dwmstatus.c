@@ -147,10 +147,11 @@ execscript(char *cmd)
 char *
 PKTwallet(void)
 {
-
-
-	return execscript("pktctl --wallet getbalance");
+//	int yourH = atoi(execscript("pktctl --wallet getinfo | awk '/CurrentHeight/ {print $2-1}'"));
+//	int backH = atoi(execscript("pktctl --wallet getinfo | awk '/BackendHeight/ {print $2-1}'"));
+	return execscript("pktctl --wallet getbalance | awk '{printf \"%.3f\", $0}'");
 }
+
 
 char*
 Weather(char *city)
@@ -158,11 +159,7 @@ Weather(char *city)
 	char fn[128] = {0};
 	strcat(fn, "curl wttr.in/");
 	strcat(fn, city);
-	char xxx ='"';
-	strcat(fn, "?format=");
-	strncat(fn, &xxx, 1);
-	strcat(fn, "%c%t.%w\\n");
-	strncat(fn, &xxx, 1);
+	strcat(fn, "?format=\"%c%t.%w\\n\"");
 	return execscript(fn);
 }
 
@@ -189,8 +186,8 @@ main(void)
 		t1 = gettemperature("/sys/devices/virtual/thermal/thermal_zone1", "temp");
 		pkt = PKTwallet();
 		weather = Weather("Coventry");
-		status = smprintf("|🪙%.7s |🌡️%s 🌡️:%s |:%s |%s |%s |",
-				       pkt, t0, t1, avgs, tmbln, weather);
+		status = smprintf("|🪙%s |🌡️%s 🌡️:%s |:%s |%s |%s |",
+				     pkt, t0, t1, avgs, tmbln, weather);
 		setstatus(status);
 
 		free(t0);
@@ -198,6 +195,7 @@ main(void)
 		free(avgs);
 		free(tmbln);
 		free(status);
+		free(pkt);
 		free(weather);
 	}
 

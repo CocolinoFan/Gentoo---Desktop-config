@@ -186,8 +186,8 @@ main(void)
 		t1 = gettemperature("/sys/devices/virtual/thermal/thermal_zone1", "temp");
 		pkt = PKTwallet();
 		weather = Weather("Coventry");
-		status = smprintf("|🪙%s |🌡️%s 🌡️:%s |:%s |%s |%s |",
-				     pkt, t0, t1, avgs, tmbln, weather);
+		status = smprintf("[🪙%s][🌡️%s 🌡️:%s][:%s][%s][%s]",
+				     pkt, t0, t1, avgs, weather, tmbln);
 		setstatus(status);
 
 		free(t0);

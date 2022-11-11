@@ -186,7 +186,7 @@ static uint forcemousemod = ShiftMask;
 
 /*
  * Xresources preferences to load at startup
- */
+*/
 ResourcePref resources[] = {
 		{ "font",         STRING,  &font },
 		{ "fontalt0",     STRING,  &font2[0] },

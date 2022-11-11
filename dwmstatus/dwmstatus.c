@@ -152,8 +152,14 @@ PKTwallet(void)
 	return execscript("pktctl --wallet getbalance | awk '{printf \"%.3f\", $0}'");
 }
 
+char *
+PKTprice(void)
+{
+	//might change the formatting to use jq instead of cut and awk. jq -r '.bidRate'
+	return execscript("curl -s https://api.bittrex.com/v3/markets/pkt-usdt/ticker|cut -d\\\" -f8|awk '{printf \"%.9s\", $0}'");
+}
 
-char*
+char *
 Weather(char *city)
 {
 	char fn[128] = {0};
@@ -172,6 +178,7 @@ main(void)
 	char *t0;
 	char *t1;
 	char *pkt;
+	char *pktp;
 	char *weather;
 
 	if (!(dpy = XOpenDisplay(NULL))) {
@@ -185,9 +192,10 @@ main(void)
 		t0 = gettemperature("/sys/devices/virtual/thermal/thermal_zone0", "temp");
 		t1 = gettemperature("/sys/devices/virtual/thermal/thermal_zone1", "temp");
 		pkt = PKTwallet();
+		pktp = PKTprice();
 		weather = Weather("Coventry");
-		status = smprintf("[🪙%s][🌡️%s 🌡️:%s][:%s][%s][%s]",
-				     pkt, t0, t1, avgs, weather, tmbln);
+		status = smprintf("[🪙%s 💲%s][🌡️%s 🌡️:%s][:%s][%s][%s]",
+				   pkt, pktp, t0, t1, avgs, weather, tmbln);
 		setstatus(status);
 
 		free(t0);
@@ -196,6 +204,7 @@ main(void)
 		free(tmbln);
 		free(status);
 		free(pkt);
+		free(pktp);
 		free(weather);
 	}
 
